@@ -1,0 +1,297 @@
+// Collision.cpp
+// 当たり判定に関する部分
+//（tureで衝突、falseで非衝突）
+#include "Collision.h"
+#include "Def.h"
+
+using namespace DirectX;
+
+// 四角形同士の衝突判定を行う関数
+bool Collision::RectAndRect(Def::Info Obj1, Def::Info Obj2)
+{
+	Def::Info Obj1Info;	// 1つ目のオブジェクトの情報を保持するための変数
+	Def::Info Obj2Info;	// 2つ目のオブジェクトの情報を保持するための変数	
+
+	Obj1Info = Obj1;
+	Obj2Info = Obj2;
+
+	float Obj1Left = Obj1Info.pos.x - Obj1Info.size.x / 2.0f;	// オブジェクト１の左辺
+	float Obj1Right = Obj1Info.pos.x + Obj1Info.size.x / 2.0f;	// オブジェクト１の右辺
+	float Obj1Top = Obj1Info.pos.y - Obj1Info.size.y / 2.0f;	// オブジェクト１の上辺
+	float Obj1Bottom = Obj1Info.pos.y + Obj1Info.size.y / 2.0f;	// オブジェクト１の底辺
+
+	float Obj2Left = Obj2Info.pos.x - Obj2Info.size.x / 2.0f;	// オブジェクト２の左辺
+	float Obj2Right = Obj2Info.pos.x + Obj2Info.size.x / 2.0f;	// オブジェクト２の右辺
+	float Obj2Top = Obj2Info.pos.y - Obj2Info.size.y / 2.0f;	// オブジェクト２の上辺
+	float Obj2Bottom = Obj2Info.pos.y + Obj2Info.size.y / 2.0f;	// オブジェクト２の底辺
+
+	// 衝突判定
+	if (Obj1Right >= Obj2Left && Obj1Left <= Obj2Right &&
+		Obj1Bottom >= Obj2Top && Obj1Top <= Obj2Bottom)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+//四角形同士の当たり判定を取ってどの方向から当たったかを返す
+Collision::Direction Collision::RectAndRectDirection(Def::Info Nobj1, Def::Info Oobj1, Def::Info obj2, Collision::Direction dire)
+{
+	LinePos ObjLine[3];		//線のポジションを格納
+
+	//今のキャラクターの座標
+	ObjLine[0].L = Nobj1.pos.x + Nobj1.size.x / 2.0f;
+	ObjLine[0].R = Nobj1.pos.x - Nobj1.size.x / 2.0f;
+	ObjLine[0].T = Nobj1.pos.y + Nobj1.size.y / 2.0f;
+	ObjLine[0].B = Nobj1.pos.y - Nobj1.size.y / 2.0f;
+
+	//前フレームのキャラクターの座標
+	ObjLine[1].L = Oobj1.pos.x + Oobj1.size.x / 2.0f;
+	ObjLine[1].R = Oobj1.pos.x - Oobj1.size.x / 2.0f;
+	ObjLine[1].T = Oobj1.pos.y + Oobj1.size.y / 2.0f;
+	ObjLine[1].B = Oobj1.pos.y - Oobj1.size.y / 2.0f;
+
+	//ブロックの座標
+	ObjLine[2].L = obj2.pos.x + obj2.size.x / 2.0f;
+	ObjLine[2].R = obj2.pos.x - obj2.size.x / 2.0f;
+	ObjLine[2].T = obj2.pos.y + obj2.size.y / 2.0f;
+	ObjLine[2].B = obj2.pos.y - obj2.size.y / 2.0f;
+
+	//当たっていなければNULLを返す
+	if (!(ObjLine[0].R < ObjLine[2].L && ObjLine[0].L > ObjLine[2].R &&
+		ObjLine[0].B < ObjLine[2].T && ObjLine[0].T > ObjLine[2].B))
+	{
+		return E_DIRECTION_NULL;
+	}
+
+	//前フレームのキャラクターとブロックが当たってるか縦横別に格納
+	Hit Old = { false, false };
+
+	if (ObjLine[1].R < ObjLine[2].L && ObjLine[1].L > ObjLine[2].R)
+	{//横
+		Old.x = true;
+	}
+	if (ObjLine[1].B < ObjLine[2].T && ObjLine[1].T > ObjLine[2].B)
+	{//縦
+		Old.y = true;
+	}
+
+	if (!Old.x && Old.y)
+	{//前フレームデ縦だけ当たっていた場合（横向きの当たり）
+		if (Nobj1.pos.x > obj2.pos.x)
+		{//左
+			return E_DIRECTION_L;
+		}
+		else if (Nobj1.pos.x <= obj2.pos.x)
+		{//右
+			return E_DIRECTION_R;
+		}
+	}
+	else if(Old.x && !Old.y)
+	{//前フレームデ横だけ当たっていた場合（縦向きの当たり）
+		if (Nobj1.pos.y > obj2.pos.y)
+		{//上
+			return E_DIRECTION_U;
+		}
+		else if (Nobj1.pos.y <= obj2.pos.y)
+		{//下
+			return E_DIRECTION_D;
+		}
+	}
+	
+	//前フレームで既に当たっていた場合前フレームと同じ処理を繰り返す
+	return dire;
+
+}
+
+// 四角形と円の衝突判定を行う関数(２つ目の引数に円の情報を入れること)
+bool Collision::RectAndCircle(Def::Info Obj1, Def::Info Obj2, float Radius)
+{
+	Def::Info Obj1Info;	// 1つ目のオブジェクトの情報を保持するための変数
+	Def::Info Obj2Info;	// 2つ目のオブジェクトの情報を保持するための変数
+
+	Obj1Info = Obj1;
+	Obj2Info = Obj2;
+
+	bool nResult = false;	// 衝突の正誤用（これを戻り値にする）
+
+	float Obj1Left = Obj1Info.pos.x - Obj1Info.size.x / 2.0f;	// オブジェクト１の左辺
+	float Obj1Right = Obj1Info.pos.x + Obj1Info.size.x / 2.0f;	// オブジェクト１の右辺
+	float Obj1Top = Obj1Info.pos.y - Obj1Info.size.y / 2.0f;	// オブジェクト１の上辺
+	float Obj1Bottom = Obj1Info.pos.y + Obj1Info.size.y / 2.0f;	// オブジェクト１の底辺
+
+
+
+	// 四角形の四辺に対して円の半径分だけ足したとき円が重なっていたら
+	if ((Obj2Info.pos.x > Obj1Left - Radius) &&
+		(Obj2Info.pos.x < Obj1Right + Radius) &&
+		(Obj2Info.pos.y > Obj1Top - Radius) &&
+		(Obj2Info.pos.y < Obj1Bottom + Radius))
+	{
+		nResult = true;
+		float fl = Radius * Radius;
+
+
+		// 左
+		if (Obj2.pos.x < Obj1Left)
+		{
+			// 左上
+			if ((Obj2Info.pos.y < Obj1Top))
+			{
+				if ((DistanceSqrf(Obj1Left, Obj1Top, Obj2Info.pos.x, Obj2Info.pos.y) >= fl))
+				{
+					nResult = false;
+				}
+			}
+			else
+			{
+				// 左下
+				if ((Obj2Info.pos.y > Obj1Bottom))
+				{
+					if ((DistanceSqrf(Obj1Left, Obj1Bottom, Obj2Info.pos.x, Obj2Info.pos.y) >= fl))
+					{
+						nResult = false;
+					}
+				}
+			}
+		}
+		else
+		{
+			// 右
+			if (Obj2Info.pos.x > Obj1Right)
+			{
+				// 右上
+				if ((Obj2Info.pos.y < Obj1Top))
+				{
+					if ((DistanceSqrf(Obj1Right, Obj1Top, Obj2Info.pos.x, Obj2Info.pos.y) >= fl))
+					{
+						nResult = false;
+					}
+				}
+				else
+				{
+					// 右下
+					if ((Obj2Info.pos.y > Obj1Bottom))
+					{
+						if ((DistanceSqrf(Obj1Right, Obj1Bottom, Obj2Info.pos.x, Obj2Info.pos.y) >= fl))
+						{
+							nResult = false;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return nResult;
+}
+
+// 円同士の衝突判定を行う関数
+bool Collision::CircleAndCircle(Def::Info Obj1, Def::Info Obj2, float Radius1, float Radius2)
+{
+	Def::Info Obj1Info;	// 1つ目のオブジェクトの情報を保持するための変数
+	Def::Info Obj2Info;	// 2つ目のオブジェクトの情報を保持するための変数
+
+	Obj1Info = Obj1;
+	Obj2Info = Obj2;
+
+	float dx = Obj1.pos.x - Obj2.pos.x;
+	float dy = Obj1.pos.y - Obj2.pos.y;
+	float dr = dx * dx + dy * dy;
+
+	float ar = Radius1 + Radius2;
+	float dl = ar * ar;
+	if (dr < dl)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+// 平方根の計算の計算を多分軽くしてる関数です。
+// いらなそうなら直してね
+float Collision::DistanceSqrf(const float t_x1, const float t_y1, const float t_x2, const float t_y2)
+{
+	float dx = t_x2 - t_x1;
+	float dy = t_y2 - t_y1;
+
+	return (dx * dx) + (dy * dy);
+}
+
+//線同士の判定
+//vtx1, vtx2, center, center
+//Obj1にshadowBlockを設定する
+Collision::Direction Collision::LineAndLine(Def::Info Obj1, Def::Info Obj2)
+{
+	XMFLOAT2 p1 = { Obj1.pos.x, Obj1.pos.y };
+	XMFLOAT2 p2 = { Obj2.pos.x, Obj2.pos.y };
+	XMFLOAT2 p3;
+	XMFLOAT2 p4;
+
+	XMFLOAT2 vtx[] = {
+		{ Obj1.pos.x + Obj1.size.x / 2.0f, Obj1.pos.y + Obj1.size.y / 2.0f },	//左上
+		{ Obj1.pos.x + Obj1.size.x / 2.0f, Obj1.pos.y - Obj1.size.y / 2.0f },	//左下
+		{ Obj1.pos.x - Obj1.size.x / 2.0f, Obj1.pos.y + Obj1.size.y / 2.0f },	//右上
+		{ Obj1.pos.x - Obj1.size.x / 2.0f, Obj1.pos.y - Obj1.size.y / 2.0f }	//右下
+	};
+
+	//左
+	p3 = vtx[0];	//左上
+	p4 = vtx[1];	//左下
+
+	if (((p1.x - p2.x) * (p3.y - p1.y) + (p1.y - p2.y) * (p1.x - p3.x))
+		* ((p1.x - p2.x) * (p4.y - p1.y) + (p1.y - p2.y) * (p1.x - p4.x)) < 0)
+	{
+		if (((p3.x - p4.x) * (p1.y - p3.y) + (p3.y - p4.y) * (p3.x - p1.x))
+			* ((p3.x - p4.x) * (p2.y - p3.y) + (p3.y - p4.y) * (p3.x - p2.x)) < 0)
+		{
+			return Collision::E_DIRECTION_L;
+		}
+	}
+
+	//右
+	p3 = vtx[2];	//右上
+	p4 = vtx[3];	//右下
+
+	if (((p1.x - p2.x) * (p3.y - p1.y) + (p1.y - p2.y) * (p1.x - p3.x))
+		* ((p1.x - p2.x) * (p4.y - p1.y) + (p1.y - p2.y) * (p1.x - p4.x)) < 0)
+	{
+		if (((p3.x - p4.x) * (p1.y - p3.y) + (p3.y - p4.y) * (p3.x - p1.x))
+			* ((p3.x - p4.x) * (p2.y - p3.y) + (p3.y - p4.y) * (p3.x - p2.x)) < 0)
+		{
+			return Collision::E_DIRECTION_R;
+		}
+	}
+
+	//上
+	p3 = vtx[0];	//左上
+	p4 = vtx[2];	//右上
+
+	if (((p1.x - p2.x) * (p3.y - p1.y) + (p1.y - p2.y) * (p1.x - p3.x))
+		* ((p1.x - p2.x) * (p4.y - p1.y) + (p1.y - p2.y) * (p1.x - p4.x)) < 0)
+	{
+		if (((p3.x - p4.x) * (p1.y - p3.y) + (p3.y - p4.y) * (p3.x - p1.x))
+			* ((p3.x - p4.x) * (p2.y - p3.y) + (p3.y - p4.y) * (p3.x - p2.x)) < 0)
+		{
+			return Collision::E_DIRECTION_U;
+		}
+	}
+
+	//下
+	p3 = vtx[1];	//左下
+	p4 = vtx[3];	//右下
+
+	if (((p1.x - p2.x) * (p3.y - p1.y) + (p1.y - p2.y) * (p1.x - p3.x))
+		* ((p1.x - p2.x) * (p4.y - p1.y) + (p1.y - p2.y) * (p1.x - p4.x)) < 0)
+	{
+		if (((p3.x - p4.x) * (p1.y - p3.y) + (p3.y - p4.y) * (p3.x - p1.x))
+			* ((p3.x - p4.x) * (p2.y - p3.y) + (p3.y - p4.y) * (p3.x - p2.x)) < 0)
+		{
+			return Collision::E_DIRECTION_U;
+		}
+	}
+
+	return Collision::E_DIRECTION_MAX;
+}
