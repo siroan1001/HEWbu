@@ -23,7 +23,7 @@ void Billboard::Draw()
 {
 	CameraBase* cam = Game3D::GetCamera();
 	Sprite::SetView(cam->GetViewMatrix());
-	Sprite::SetProjection(cam->GetProjectionMatrix(CameraBase::E_CAM_ANGLE_PERSPECTIVEFOV));
+	Sprite::SetProjection(cam->GetProjectionMatrix(CameraBase::E_CAM_ANGLE_ORTHOGRAPHIC));
 	XMFLOAT4X4 inv;	//‹ts—ñ‚ÌŠi”[æ
 	inv = cam->GetViewMatrix();
 	XMMATRIX matInv = XMLoadFloat4x4(&inv);

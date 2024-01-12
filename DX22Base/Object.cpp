@@ -81,7 +81,7 @@ void Object::Draw()
 	XMMATRIX temp = XMMatrixScaling(m_ModelSize.x, m_ModelSize.y, m_ModelSize.z) * XMMatrixRotationX(ConvertRot.x) * XMMatrixRotationY(ConvertRot.y) * XMMatrixRotationZ(ConvertRot.z)	* XMMatrixTranslation(m_Info.pos.x, m_Info.pos.y, m_Info.pos.z);
 	XMStoreFloat4x4(&mat[0], XMMatrixTranspose(temp));	//ワールド行列
 	mat[1] = m_pCamera->GetViewMatrix();		//ビュー行列
-	mat[2] = m_pCamera->GetProjectionMatrix(CameraBase::CameraAngle::E_CAM_ANGLE_PERSPECTIVEFOV);	//プロジェクション行列
+	mat[2] = m_pCamera->GetProjectionMatrix(CameraBase::CameraAngle::E_CAM_ANGLE_ORTHOGRAPHIC);	//プロジェクション行列
 	//m_ObjColor.color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	m_pWVP->Write(mat);		//WVP設定
 	m_pWVP->BindVS(0);

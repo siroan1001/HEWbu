@@ -445,9 +445,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="ModelVS.hlsl">
-      <Filter>リソース ファイル</Filter>
-    </FxCompile>
     <FxCompile Include="ModelPS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>

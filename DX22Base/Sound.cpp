@@ -6,7 +6,7 @@
 #include <Shlwapi.h>
 #include <vector>
 #include <map>
-
+#include <string>
 
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib, "msacm32.lib")

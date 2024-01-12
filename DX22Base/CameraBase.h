@@ -3,6 +3,7 @@
 
 #include <DirectXMath.h>
 #include "Def.h"
+#include "Main.h"
 
 using namespace DirectX;
 
@@ -65,12 +66,12 @@ public:
 			break;
 		case CameraBase::E_CAM_ANGLE_ORTHOGRAPHIC:
 			proj = XMMatrixOrthographicLH(
-				XMConvertToRadians(m_fovy),
-				m_aspect,
+				GetAppWidth() * 0.0039f,
+				GetAppHeight() * 0.0039f,
 				m_near,
 				m_far
 			);
-			proj *= XMMatrixScaling(0.1f, 0.3f, 1.0f);
+			//proj *= XMMatrixScaling(0.1f, 0.3f, 1.0f);
 			break;
 		default:
 			break;

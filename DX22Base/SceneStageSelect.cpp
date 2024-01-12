@@ -63,11 +63,7 @@ void SceneStageSelect::Draw()
 void SceneStageSelect::ReStart()
 {
 	m_pCamera->SetLook(XMFLOAT3(-5.48f, 4.05f, 0.0f));
-<<<<<<< HEAD
-
-=======
 	m_pBGMSource = Sound::Start(Sound::E_SOUND_KIND_BGM_STAGESELECT);
->>>>>>> 6a1e6e0c650a8bb974abf84381209bbc92563364
 }
 
 void SceneStageSelect::SetCamera(CameraBase * camera)

@@ -58,11 +58,7 @@ void Init()
 	ModelList::Init();
 	EffectManager::Init();
 	ShadowBlock::Init();
-<<<<<<< HEAD
-	InitSound();
-=======
 	Sound::Init();
->>>>>>> 6a1e6e0c650a8bb974abf84381209bbc92563364
 
 	InitCtrl();
 
@@ -78,11 +74,7 @@ void Uninit()
 	
 	delete g_pGame;
 	UninitCtrl();
-<<<<<<< HEAD
-	UninitSound();
-=======
 	Sound::Unitit();
->>>>>>> 6a1e6e0c650a8bb974abf84381209bbc92563364
 	ShadowBlock::Uninit();
 	EffectManager::Uninit();
 	ModelList::Uninit();

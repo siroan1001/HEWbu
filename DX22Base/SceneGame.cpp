@@ -133,7 +133,7 @@ void SceneGame::Draw()
 	CameraBase* cam = Game3D::GetCamera();
 
 	//ジオメトリーのビュー行列とプロジェクション行列を設定する
-	SetGeometoryVPMatrix(cam->GetViewMatrix(), cam->GetProjectionMatrix(CameraBase::CameraAngle::E_CAM_ANGLE_PERSPECTIVEFOV), cam->GetPos());
+	SetGeometoryVPMatrix(cam->GetViewMatrix(), cam->GetProjectionMatrix(CameraBase::CameraAngle::E_CAM_ANGLE_ORTHOGRAPHIC), cam->GetPos());
 	for (int i = 0; i < E_LAYER_MAX; i++)
 	{
 		if (!m_pLayer[i])	continue;
