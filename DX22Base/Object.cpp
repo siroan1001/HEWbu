@@ -17,6 +17,7 @@ Object::Object()
 	,m_Info{{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}}
 	,m_pCamera(NULL)
 	,m_ModelSize{1.0f, 1.0f, 1.0f}
+	,m_Destroy(false)
 {
 }
 

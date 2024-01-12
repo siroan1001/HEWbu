@@ -4,6 +4,8 @@
 BYTE g_keyTable[256];
 BYTE g_oldTable[256];
 
+
+
 HRESULT InitInput()
 {
 	// ˆê”ÔÅ‰‚Ì“ü—Í

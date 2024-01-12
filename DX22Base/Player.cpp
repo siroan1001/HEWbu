@@ -120,6 +120,7 @@ void Player::Update()
 		if (m_ModelSize.x < 0.0f)	m_ModelSize.x = 0.0f;
 		if (m_ModelSize.y < 0.0f)	m_ModelSize.y = 0.0f;
 		if (m_ModelSize.z < 0.0f)	m_ModelSize.z = 0.0f;
+		if (m_ModelSize.x <= 0.0f && m_ModelSize.y <= 0.0f && m_ModelSize.z <= 0.0f)	m_Destroy = true;
 	}
 
 	//d—Í‰ÁŽZ

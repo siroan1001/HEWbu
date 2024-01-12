@@ -23,7 +23,7 @@ void ShadowBlock::Uninit()
 ShadowBlock::ShadowBlock(Def::Info info)
 {
 	m_BlockInfo.Info.pos = { 999.0f, 999.0f, 0.0f };
-	m_BlockInfo.Info.size = { 0.5f, 0.5f, 0.5f };
+	m_BlockInfo.Info.size = { 0.25f, 0.25f, 0.25f };
 	m_BlockInfo.Info.rot = { 0.0f, 0.0f, 0.0f };
 	m_BlockInfo.xy = { 0.0f, 0.0f };
 

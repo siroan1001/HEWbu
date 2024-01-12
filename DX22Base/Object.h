@@ -22,6 +22,7 @@ public:
 	void Draw();
 	static void SetObjColor(XMFLOAT4 color);
 	XMFLOAT4 GetColor();
+	bool IsDestroy() { return m_Destroy; }
 
 	Def::Info GetInfo();
 
@@ -45,6 +46,7 @@ protected:
 	static ConstantBuffer* m_pObjColor;
 	static ObjCol m_ObjColor;
 	XMFLOAT4 m_Color;
+	bool m_Destroy;
 };
 
 #endif // !_____OBJECT_H____
