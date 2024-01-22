@@ -32,7 +32,7 @@ public:
 	};
 
 public:
-	Player(Collision::Direction dire);
+	Player(Collision::Direction dire = Collision::E_DIRECTION_L);
 	void Update();
 
 	void SetPos(XMFLOAT3 pos);

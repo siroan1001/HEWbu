@@ -40,7 +40,8 @@ SceneGame::SceneGame(StageNumber stagenum)
 	m_pBlend->Create(blend);
 	m_pBlend->Bind();
 
-
+	Player* player = new Player();
+	m_ObjList.push_back(player);
 
 	switch (stagenum)
 	{
@@ -69,8 +70,6 @@ SceneGame::~SceneGame()
 
 void SceneGame::Update()
 {
-
-
 	//switch (m_GameStatus)
 	//{
 	//case SceneGame::E_GAME_STATUS_GAMEOVER:
@@ -103,7 +102,6 @@ void SceneGame::Update()
 
 	if (m_GameStatus == E_GAME_STATUS_GAMEOVER)
 	{
-		//Game3D::SetScene(Game3D::E_SCENE_KIND_RESULT);
 		if (IsButtonTrigger(BUTTON_A) || IsKeyTrigger(VK_SPACE))
 		{
 			Game3D::SetScene(Game3D::E_SCENE_KIND_STAGESELECT);
@@ -156,8 +154,6 @@ void SceneGame::ReStart()
 	m_pBGMSource = Sound::Start(Sound::E_SOUND_KIND_BGM_STAGESELECT);
 	m_pBGMSource->SetVolume(0.5f);
 }
-
-
 
 SceneGame::GameStatus SceneGame::GetGameStatus()
 {

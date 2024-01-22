@@ -17,7 +17,7 @@ BG::BG(BG::BGKind bg)
 		break;
 	case E_BG_KIND_STAGESELECT:
 		LoadTextureFromFile("Assets/StageSelect.png", &m_pTex);
-		m_Info.Size = XMFLOAT2(5.1f, 2.618f);
+		m_Info.Size = XMFLOAT2(5.0f, 2.813f);
 		break;
 	case E_BG_KIND_FOREST:
 		LoadTextureFromFile("Assets/GameBG.png", &m_pTex);

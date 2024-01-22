@@ -4,7 +4,8 @@
 #define _____SCENE_BACE_H____
 
 #include "Sound.h"
-
+#include "Object.h"
+#include <vector>
 
 
 class SceneBace
@@ -21,6 +22,7 @@ public:
 
 protected:
 	static IXAudio2SourceVoice* m_pBGMSource;
+	std::vector<Object*> m_ObjList;
 };
 
 

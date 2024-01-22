@@ -366,8 +366,6 @@ void Stage::Draw()
 		SetGeometoryRotation(m_Date[*m_pStageNum].m_Info[i].rot.x, m_Date[*m_pStageNum].m_Info[i].rot.y, m_Date[*m_pStageNum].m_Info[i].rot.z);
 		SetGeometoryColor(XMFLOAT4(10.0f, 10.0f, 10.0f, 1.0f));
 		DrawBox();
-
-		
 	}
 
 	Object::SetObjColor(m_pGround->GetColor());

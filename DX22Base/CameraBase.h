@@ -87,7 +87,7 @@ public:
 		return m_Info;
 	}
 protected:
-	XMFLOAT3 m_pos, m_look, m_up;		//ビュー行列の設定に必要な変数
+	XMFLOAT3 m_pos,m_look, m_up;		//ビュー行列の設定に必要な変数
 	float m_fovy, m_aspect, m_near, m_far;		//プロジェクション行列の設定に必要な変数
 	float m_radXZ, m_radY;		//回り込みの角度
 	float m_radius;		//注視点からカメラの距離
